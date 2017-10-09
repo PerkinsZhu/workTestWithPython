@@ -25,6 +25,11 @@ def createDataSet():
 
 
 def calcShannonEnt(dataSet):
+    '''
+    计算香农熵
+    :param dataSet:
+    :return:
+    '''
     numEntries = len(dataSet)
     labelCounts = {}
     for featVec in dataSet:  # the the number of unique elements and their occurance
@@ -39,6 +44,15 @@ def calcShannonEnt(dataSet):
 
 
 def splitDataSet(dataSet, axis, value):
+    '''
+    获取以指定节点为根节点的处理数据集
+        ·找到含有该特征且值为指定值的item。例如：axis = 0  value = "不高" 则：["不高", "不好", "不健康", '放弃']
+        ·从该组数据中移去该特征属性      ==>  ["不好", "不健康", '放弃']
+    :param dataSet:
+    :param axis:  指定特征位置。
+    :param value:
+    :return:
+    '''
     retDataSet = []
     for featVec in dataSet:
         if featVec[axis] == value:
@@ -78,11 +92,11 @@ def majorityCnt(classList):
 
 
 def createTree(dataSet, labels):
-    classList = [example[-1] for example in dataSet]
+    classList = [example[-1] for example in dataSet] #这里取的是最后一列label结果
 
     if classList.count(classList[0]) == len(classList):  # 结束条件：可以定位到最终结果，也即结果集中只有一个明确的值
         return classList[0]  # stop splitting when all of the classes are equal
-    if len(dataSet[0]) == 1:  # stop splitting when there are no more features in dataSet 结束条件： 数据集中没有特征的时候，此时只有一个确定的结果 label
+    if len(dataSet[0]) == 1:  # stop splitting when there are no more features in dataSet 结束条件： 数据集中没有特征的时候，此时dataSet中没有用来判断的特征，只有结果
         return majorityCnt(classList)  # 如果没有特征属性，只有结果集，则选取出现次数最高的结果
 
     bestFeat = chooseBestFeatureToSplit(dataSet)  # 找出信息增益最大的特征属性
@@ -115,6 +129,12 @@ def classify(inputTree, featLabels, testVec):
 
 
 def storeTree(inputTree, filename):
+    '''
+    序列化决策树
+    :param inputTree:
+    :param filename:
+    :return:
+    '''
     import pickle
     fw = open(filename, 'wb')
     pickle.dump(inputTree, fw)
@@ -122,6 +142,11 @@ def storeTree(inputTree, filename):
 
 
 def grabTree(filename):
+    '''
+    反序列化决策树
+    :param filename: 文件路径
+    :return: 决策树dict
+    '''
     import pickle
     fr = open(filename,'rb')
     return pickle.load(fr)
