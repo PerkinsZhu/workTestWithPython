@@ -75,10 +75,12 @@ def chooseBestFeatureToSplit(dataSet):
             subDataSet = splitDataSet(dataSet, i, value)
             prob = len(subDataSet) / float(len(dataSet))
             newEntropy += prob * calcShannonEnt(subDataSet)
+        print(i,uniqueVals,newEntropy)
         infoGain = baseEntropy - newEntropy  # calculate the info gain; ie reduction in entropy 这里计算的是信息增益，使用的ID3算法计算：http://blog.csdn.net/acdreamers/article/details/44661149
         if (infoGain > bestInfoGain):  # compare this to the best gain so far
             bestInfoGain = infoGain  # if better than current best, set to best
             bestFeature = i
+        print(bestFeature,bestInfoGain)
     return bestFeature  # returns an integer
 
 
