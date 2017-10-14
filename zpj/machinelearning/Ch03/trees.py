@@ -11,12 +11,12 @@ from zpj.machinelearning.Ch03.treePlotter import createPlot
 
 
 def createDataSet():
-    dataSet = [["不高", "不好", "不健康", '放弃'],
+    dataSet = [["不高", "不好", "不健康", '坚决放弃'],
                ["不高",  "不好", "健康", '放弃'],
                ["不高", "好", "不健康", '放弃'],
                ["不高", "好", "健康", '待定'],
                ["高",  "不好", "不健康", '放弃'],
-               ["高",  "不好", "健康", '待定'],
+               ["高",  "不好", "健康", '放弃'],
                ["高", "好", "不健康", '待定'],
                ["高", "好", "健康", '确定']]
     labels = ['高吗？', '质量好吗？', '健康吗？']
@@ -74,13 +74,15 @@ def chooseBestFeatureToSplit(dataSet):
         for value in uniqueVals:
             subDataSet = splitDataSet(dataSet, i, value)
             prob = len(subDataSet) / float(len(dataSet))
-            newEntropy += prob * calcShannonEnt(subDataSet)
-        print(i,uniqueVals,newEntropy)
+            temp = prob * calcShannonEnt(subDataSet)
+            print (value,prob,"====",temp)
+            newEntropy += temp
+
         infoGain = baseEntropy - newEntropy  # calculate the info gain; ie reduction in entropy 这里计算的是信息增益，使用的ID3算法计算：http://blog.csdn.net/acdreamers/article/details/44661149
+        print(baseEntropy,"-----",newEntropy,"----------",infoGain)
         if (infoGain > bestInfoGain):  # compare this to the best gain so far
             bestInfoGain = infoGain  # if better than current best, set to best
             bestFeature = i
-        print(bestFeature,bestInfoGain)
     return bestFeature  # returns an integer
 
 
