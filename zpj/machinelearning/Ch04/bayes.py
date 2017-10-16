@@ -51,10 +51,6 @@ def trainNB0(trainMatrix,trainCategory):
         else:
             p0Num += trainMatrix[i]
             p0Denom += sum(trainMatrix[i])
-
-
-
-
     p1Vect = log(p1Num/p1Denom)          #change to log() 侮辱性词汇中 对（每个单词出现在该类别词汇表中的概率）求log目的为了防止下溢出
     p0Vect = log(p0Num/p0Denom)          #change to log() 非侮辱性词汇中 对（每个单词出现在该类别词汇表中的概率）求log
             #也即是：词汇表中的每个次分别出现在侮辱性列表文档中的概率和非侮辱性文档中的概率
@@ -78,11 +74,6 @@ def classifyNB(vec2Classify, p0Vec, p1Vec, pClass1):
     '''
     计算出该文档中所有单词在侮辱性文档和非侮辱性文档汇总出现的概率
     '''
-
-    print("-----",vec2Classify)
-    print("=======",p1Vec)
-    print("-----",p0Vec)
-
     '''
     这里为什么会有： + log(pClass1)
         公式：log(AB) = log(A)+log(B) 
@@ -113,7 +104,6 @@ def testingNB():
     trainMat=[]
     for postinDoc in listOPosts:#通过循环构造待测试文档向量
         trainMat.append(setOfWords2Vec(myVocabList, postinDoc))
-
     p0V,p1V,pAb = trainNB0(array(trainMat),array(listClasses))#训练文档(该文档已经被人工标注)数据，获取“侮辱性言论”模型参数。listClasses是trainMat的标注结果
     #到这一步训练结束，已经从训练集中提取到每个单词在侮辱性文档和非侮辱性文档中出现的概率
     testEntry = ['love', 'my', 'dalmation']
@@ -121,7 +111,7 @@ def testingNB():
 
     print (testEntry,'classified as: ',classifyNB(thisDoc,p0V,p1V,pAb))#调用classifyNB 来计算测试文档
     #第二组测试数据
-    testEntry = ['stupid', 'garbage']
+    testEntry = ['hello', 'dog','my','cute','how']
     thisDoc = array(setOfWords2Vec(myVocabList, testEntry))
     print (testEntry,'classified as: ',classifyNB(thisDoc,p0V,p1V,pAb))
 

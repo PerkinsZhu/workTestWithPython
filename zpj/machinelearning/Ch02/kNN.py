@@ -22,7 +22,7 @@ def classify0(inX, dataSet, labels, k):
     sqDiffMat = diffMat**2#矩阵开方
     sqDistances = sqDiffMat.sum(axis=1)#对矩阵行求和 矩阵的每一行向量相加 np.sum([[0,1,2],[2,1,3],axis=1) = array（[3,6]）。得出以为矩阵，长度对应类别数目
     distances = sqDistances**0.5#开根号 计算出待测试点和各个点的距离
-
+    # print(distances)
     sortedDistIndicies = distances.argsort()#对矩阵排序并取其下标赋值给sortedDistIndicies。这里取下标的作用是为了对应label集合，方便从中取出分类
     classCount={}          
     for i in range(k):#循环求出最接近测试数据K个点的最多的label
@@ -53,8 +53,8 @@ def file2matrix(filename):
         listFromLine = line.split('\t')
         returnMat[index,:] = listFromLine[0:3]
         # 存储类别标签.注意这里，在使用datingTestSet2.txt数据绘制散点图的时候，要把label转化为数值型类型，这样才可以在XY坐标上显示标度。
-        # 在使用datingTestSte.txt的时候，因为label为String  需要取消转换 classLabelVector.append(listFromLine[-1])
-        classLabelVector.append(int(str(listFromLine[-1])))
+        # 在使用datingTestSte.txt的时候，因为label为String  需要取消转换 classLabelVector.append(listFromLine[-1])   classLabelVector.append(int(str(listFromLine[-1])))
+        classLabelVector.append(listFromLine[-1])
         index += 1
     return returnMat,classLabelVector
     
@@ -132,7 +132,7 @@ def showData(datingDataMat,datingLabels):
 if __name__ == '__main__':
     # group ,label =createDataSet()
     # print(classify0([0,1],group,label,3))
-    # datingDataMat,datingLabels= file2matrix('datingTestSet2.txt')
-    # print(datingDataMat,datingLabels)
-    # showData(datingDataMat,datingLabels)
-    datingClassTest()
+    datingDataMat,datingLabels= file2matrix('datingTestSet.txt')
+    normDataSet, ranges, minVals = autoNorm(datingDataMat)
+    print(classify0([2112.2,1.232,0.252],normDataSet ,datingLabels,50))
+    # datingClassTest()
