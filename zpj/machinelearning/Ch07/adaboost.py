@@ -52,6 +52,7 @@ def buildStump(dataArr,classLabels,D):
     numSteps = 10.0; bestStump = {}; bestClasEst = mat(zeros((m,1)))
     minError = inf #init error sum, to +infinity初始化为无穷大
     for i in range(n):#loop over all dimensions 对所有的列(数据特征)进行循环 该层是确定那个特征
+        # 注意这里是逐个对各个特征进行判断的，并没有对特征进行组合。也即是获取的最佳条件是基于某个特征的，而不是基于某个特征组合的
         rangeMin = dataMatrix[:,i].min();#找到该列的最小值
         rangeMax = dataMatrix[:,i].max();#找到该列的最大值
         stepSize = (rangeMax-rangeMin)/numSteps#计算平均步长
@@ -89,18 +90,21 @@ def adaBoostTrainDS(dataArr,classLabels,numIt=40):
     for i in range(numIt):
         bestStump,error,classEst = buildStump(dataArr,classLabels,D)#build Stump
         #print "D:",D.T
-        alpha = float(0.5*log((1.0-error)/max(error,1e-16)))#calc alpha, throw in max(error,eps) to account for error=0
+        alpha = float(0.5*log((1.0-error)/max(error,1e-16)))#calc alpha, throw in max(error,eps) to account for error=0  计算本次单层决策树输出结果的权重 该
+        # 计算公式见于《机器学习实践》P117
+        #该alpha用于本次计算 用来更新D值
         bestStump['alpha'] = alpha  
         weakClassArr.append(bestStump)                  #store Stump Params in Array
         #print "classEst: ",classEst.T
         expon = multiply(-1*alpha*mat(classLabels).T,classEst) #exponent for D calc, getting messy
-        D = multiply(D,exp(expon))                              #Calc New D for next iteration
+        D = multiply(D,exp(expon))                              #Calc New D for next iteration 更新下一次迭代中的权重向量D exp（）取指数函数
         D = D/D.sum()
         #calc training error of all classifiers, if this is 0 quit for loop early (use break)
         aggClassEst += alpha*classEst
         #print "aggClassEst: ",aggClassEst.T
-        aggErrors = multiply(sign(aggClassEst) != mat(classLabels).T,ones((m,1)))
-        errorRate = aggErrors.sum()/m
+        aggErrors = multiply(sign(aggClassEst) != mat(classLabels).T,ones((m,1))) #sign(X)计算X的符号值，+1/-1/0
+        errorRate = aggErrors.sum()/m   #计算错误率
+
         print ("total error: ",errorRate)
         if errorRate == 0.0: break
     return weakClassArr,aggClassEst
@@ -147,8 +151,8 @@ def plotROC(predStrengths, classLabels):
 
 def testHorse():
     dataMat, labelMat = loadDataSet("horseColicTraining2.txt")
-    weakClassArr, aggClassEst =adaBoostTrainDS(dataMat,labelMat,100)
-    print(weakClassArr)
+    weakClassArr, aggClassEst =adaBoostTrainDS(dataMat,labelMat,10)
+    plotROC(aggClassEst.T, labelMat)
 
 if __name__ == '__main__':
     dataMat, classLabels =loadSimpData()
@@ -158,7 +162,10 @@ if __name__ == '__main__':
     # print(bestStump)
     # print(minError)
     # print(bestClasEst)
+    # -----------------------------------
     # weakClassArr, aggClassEst=adaBoostTrainDS(dataMat,classLabels,30)
     # data =adaClassify([[5,5],[0,0]],weakClassArr)
+    # plotROC(aggClassEst.T, classLabels)
     # print(data)
+    # -----------------------------------
     testHorse()
