@@ -18,27 +18,34 @@ def loadDataSet(fileName):      #general function to parse tab -delimited floats
         labelMat.append(float(curLine[-1]))
     return dataMat,labelMat
 
-def standRegres(xArr,yArr):
+def standRegres(xArr,yArr):#计算回归系数
     xMat = mat(xArr); yMat = mat(yArr).T
     xTx = xMat.T*xMat
-    if linalg.det(xTx) == 0.0:
+    if linalg.det(xTx) == 0.0:#计算行列式是否为0
         print ("This matrix is singular, cannot do inverse")
         return
     ws = xTx.I * (xMat.T*yMat)
     return ws
 
-def lwlr(testPoint,xArr,yArr,k=1.0):
+def lwlr(testPoint,xArr,yArr,k=1.0):#使用局部加权线性回归
     xMat = mat(xArr); yMat = mat(yArr).T
     m = shape(xMat)[0]
+    #计算待测试点到数据集中每个点的权重
     weights = mat(eye((m)))
-    for j in range(m):                      #next 2 lines create weights matrix
+    print(weights)
+    for j in range(m):                      #next 2 lines create weights matrix使用高斯核类给每个点计算权重
         diffMat = testPoint - xMat[j,:]     #
         weights[j,j] = exp(diffMat*diffMat.T/(-2.0*k**2))
+    print("++++++",weights)
+
+    #计算数据集的回归系数
     xTx = xMat.T * (weights * xMat)
     if linalg.det(xTx) == 0.0:
         print ("This matrix is singular, cannot do inverse")
         return
     ws = xTx.I * (xMat.T * (weights * yMat))
+
+    #根据计算出来的回归系数计算测试点的结果
     return testPoint * ws
 
 def lwlrTest(testArr,xArr,yArr,k=1.0):  #loops over all the data points and applies lwlr to each one
@@ -215,7 +222,10 @@ def test():
     dataMat, labelMat =loadDataSet("ex0.txt")
     xMat =mat(dataMat)
     yMat = mat(labelMat)
+
     ws = standRegres(dataMat,labelMat)
+
+    print("回归系数：",ws)
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.scatter(xMat[:,1].flatten().A[0],yMat.T[:,0].flatten().A[0])
@@ -225,7 +235,27 @@ def test():
     ax.plot(xCopy[:,1],yHat)
     plt.show()
 
+def test02():
+    dataMat, labelMat =loadDataSet("ex0.txt")
+    xMat =mat(dataMat)
+    yMat = mat(labelMat)
+    ws = standRegres(dataMat,labelMat)
+    print("回归系数：",ws)
+    xCopy = xMat.copy()
+    xCopy.sort(0)
+    yHat =xCopy*ws
+    print("相关系数：",corrcoef(yHat.T,yMat))
+    temp = dataMat[0]
+    print("---",temp)
+    data = lwlr(temp,dataMat,labelMat,1.0)
+    print(data)
+
+def test03():
+    dataMat, labelMat = loadDataSet("ex0.txt")
+    data= lwlrTest(dataMat,dataMat,labelMat,0.003)
+    print(data)
+
 import matplotlib.pyplot as plt
 if __name__ == '__main__':
-    test()
+    test02()
 

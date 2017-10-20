@@ -56,7 +56,6 @@ def buildStump(dataArr,classLabels,D):
         rangeMin = dataMatrix[:,i].min();#找到该列的最小值
         rangeMax = dataMatrix[:,i].max();#找到该列的最大值
         stepSize = (rangeMax-rangeMin)/numSteps#计算平均步长
-
         for j in range(-1,int(numSteps)+1):#loop over all range in current dimension 该层循环的目的是确定阈值
             for inequal in ['lt', 'gt']: #go over less than and greater than、 该层的循环是确定是大于阈值还是小于阈值的是数据划入类别A
                 # 注意这个条件的必要性。
