@@ -36,11 +36,9 @@ def lwlr(testPoint,xArr,yArr,k=1.0):#使用局部加权线性回归
     m = shape(xMat)[0]
     #计算待测试点到数据集中每个点的权重
     weights = mat(eye((m)))
-    print(weights)
     for j in range(m):                      #next 2 lines create weights matrix使用高斯核类给每个点计算权重
         diffMat = testPoint - xMat[j,:]     #
         weights[j,j] = exp(diffMat*diffMat.T/(-2.0*k**2))
-    print("++++++",weights)
 
     #计算数据集的回归系数
     xTx = xMat.T * (weights * xMat)
@@ -70,7 +68,7 @@ def lwlrTestPlot(xArr,yArr,k=1.0):  #same thing as lwlrTest except it sorts X fi
 def rssError(yArr,yHatArr): #yArr and yHatArr both need to be arrays
     return ((yArr-yHatArr)**2).sum()
 
-def ridgeRegres(xMat,yMat,lam=0.2):
+def ridgeRegres(xMat,yMat,lam=0.2):#使用岭回归计算回归系数
     xTx = xMat.T*xMat
     denom = xTx + eye(shape(xMat)[1])*lam
     if linalg.det(denom) == 0.0:
@@ -101,7 +99,7 @@ def regularize(xMat):#regularize by columns
     inMat = (inMat - inMeans)/inVar
     return inMat
 
-def stageWise(xArr,yArr,eps=0.01,numIt=100):
+def stageWise(xArr,yArr,eps=0.01,numIt=100):#前向逐步线性回归
     xMat = mat(xArr); yMat=mat(yArr).T
     yMean = mean(yMat,0)
     yMat = yMat - yMean     #can also regularize ys but will get smaller coef
@@ -258,8 +256,24 @@ def test03():
     dataMat, labelMat = loadDataSet("ex0.txt")
     data= lwlrTest(dataMat,dataMat,labelMat,0.003)
     print(data)
+def testBaoYu():
+    abX,abY = loadDataSet("abalone.txt")
+    yHat01 =lwlrTest(abX[0:99],abX[0:99],abY[0:99],0.1)
+    yHat1 =lwlrTest(abX[0:99],abX[0:99],abY[0:99],1)
+    yHat10=lwlrTest(abX[0:99],abX[0:99],abY[0:99],10)
+    print(rssError(abY[0:99],yHat01.T))
+    print(rssError(abY[0:99],yHat1.T))
+    print(rssError(abY[0:99],yHat10.T))
+    print("====================")
+    yHat21=lwlrTest(abX[100:199],abX[0:99],abY[0:99],0.1)
+    yHat22=lwlrTest(abX[100:199],abX[0:99],abY[0:99],1)
+    yHat23=lwlrTest(abX[100:199],abX[0:99],abY[0:99],10)
+    print(rssError(abY[100:199],yHat21.T))
+    print(rssError(abY[100:199],yHat22.T))
+    print(rssError(abY[100:199],yHat23.T))
+
 
 import matplotlib.pyplot as plt
 if __name__ == '__main__':
-    test02()
+    testBaoYu()
 
