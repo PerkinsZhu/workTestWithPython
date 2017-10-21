@@ -20,11 +20,15 @@ def loadDataSet(fileName):      #general function to parse tab -delimited floats
 
 def standRegres(xArr,yArr):#计算回归系数
     xMat = mat(xArr); yMat = mat(yArr).T
-    xTx = xMat.T*xMat
+    temp= xMat.T
+    print(xMat)
+    print(temp)
+    xTx = temp*xMat
+    print(xTx)
     if linalg.det(xTx) == 0.0:#计算行列式是否为0
         print ("This matrix is singular, cannot do inverse")
         return
-    ws = xTx.I * (xMat.T*yMat)
+    ws = xTx.I * (xMat.T*yMat)#这个公式是怎么计算得来的??麦子学院用的平均值公式是怎么来的？
     return ws
 
 def lwlr(testPoint,xArr,yArr,k=1.0):#使用局部加权线性回归
