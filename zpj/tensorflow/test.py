@@ -42,4 +42,5 @@ def testFour():
     sess.close()
 
 if __name__ == '__main__':
-    testTwo()
+    # testTwo()
+    testOne()

@@ -26,7 +26,7 @@ def createDataSet():
 
 def calcShannonEnt(dataSet):
     '''
-    计算香农熵
+    计算香农熵 实质就是计算概率
     :param dataSet:
     :return:
     '''
@@ -34,7 +34,7 @@ def calcShannonEnt(dataSet):
     labelCounts = {}
     for featVec in dataSet:  # the the number of unique elements and their occurance
         currentLabel = featVec[-1]
-        if currentLabel not in labelCounts.keys(): labelCounts[currentLabel] = 0
+        if currentLabel not in labelCounts.keys():labelCounts[currentLabel] = 0
         labelCounts[currentLabel] += 1
     shannonEnt = 0.0
     for key in labelCounts:
@@ -56,19 +56,19 @@ def splitDataSet(dataSet, axis, value):
     retDataSet = []
     for featVec in dataSet:
         if featVec[axis] == value:
-            reducedFeatVec = featVec[:axis]  # chop out axis used for splitting
-            reducedFeatVec.extend(featVec[axis + 1:])
+            reducedFeatVec = featVec[:axis]  # chop out axis used for splitting 取axis前面的值
+            reducedFeatVec.extend(featVec[axis + 1:]) #取axis后面的值。这两步的目的是移出axis位置的值
             retDataSet.append(reducedFeatVec)
     return retDataSet
 
 
-def chooseBestFeatureToSplit(dataSet):
+def chooseBestFeatureToSplit(dataSet): #函数的目的是为了获得下一个进行分类的特征，使用的方法是ID3算法
     numFeatures = len(dataSet[0]) - 1  # the last column is used for the labels
     baseEntropy = calcShannonEnt(dataSet)
     bestInfoGain = 0.0;
-    bestFeature = -1
+    bestFeature = -1 #以下的逻辑是为了计算信息增益http://blog.csdn.net/acdreamers/article/details/44661149
     for i in range(numFeatures):  # iterate over all the features
-        featList = [example[i] for example in dataSet]  # create a list of all the examples of this feature
+        featList = [example[i] for example in dataSet]  # create a list of all the examples of this feature  取出数据集中第i列的特征值
         uniqueVals = set(featList)  # get a set of unique values
         newEntropy = 0.0
         for value in uniqueVals:
@@ -82,8 +82,8 @@ def chooseBestFeatureToSplit(dataSet):
         print(baseEntropy,"-----",newEntropy,"----------",infoGain)
         if (infoGain > bestInfoGain):  # compare this to the best gain so far
             bestInfoGain = infoGain  # if better than current best, set to best
-            bestFeature = i
-    return bestFeature  # returns an integer
+            bestFeature = i         #筛选出信息增益较大的特征位置
+    return bestFeature  # returns an integer 返回信息增益最大的位置
 
 
 def majorityCnt(classList):
@@ -105,9 +105,10 @@ def createTree(dataSet, labels):
 
     bestFeat = chooseBestFeatureToSplit(dataSet)  # 找出信息增益最大的特征属性
     bestFeatLabel = labels[bestFeat]
-    myTree = {bestFeatLabel: {}}
+    myTree = {bestFeatLabel: {}} #构造决策树
     del (labels[bestFeat])
 
+    #获取该特征的所有取值范围
     featValues = [example[bestFeat] for example in dataSet]  # 计算该特征属性内容的所有分类，该分来构造子节点。比如年龄有三个分支 ： X<20  20<X<40  40<X 那么该属性特征结点则会有三个分叉
     uniqueVals = set(featValues)  # 对所有分类去重
 
@@ -163,7 +164,7 @@ if __name__ == '__main__':
     print(tree)
     result = classify(tree, labelSet,["不高", "好", "健康"])#使用决策树进行测试
     print (result)
-    # createPlot(tree) 绘制树图形
+    createPlot(tree) #绘制树图形
     '''
     #序列化到本地，然后直接使用
     storeTree(tree,"classifierStorage.txt")

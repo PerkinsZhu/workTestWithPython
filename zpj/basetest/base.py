@@ -3,7 +3,11 @@ import numpy as np
 from matplotlib.pyplot import plot
 from matplotlib.pyplot import show
 import sys
-def testOther():
+
+
+# import unittest
+
+def test_Other():
     a = float(sys.argv[1])
     b = float(sys.argv[2])
     t = np.linspace(-np.pi, np.pi, 201)
@@ -12,14 +16,16 @@ def testOther():
     plot(x, y)
     show()
 
+
 def testNumpy():
-    npArray =arange(12).reshape(3,4)
+    npArray = np.arange(12).reshape(3, 4)
     print(npArray)
-    marix = matrix((120,13))
+    marix = matrix((120, 13))
     print(marix)
     print(marix.T)
     print(marix.dtype)
-    print(arange(7,dtype="D"))
+    print(np.arange(7, dtype="D"))
+
 
 def testMatrix():
     temp = ones((6, 1))
@@ -32,9 +38,18 @@ def testMatrix():
     #
     # print(data[:,1])
 
-
     # print(data)
     # print("---------------")
     # print(data.T)
     # print("---------------")
     # print(data.transpose())
+
+
+def testIf():
+    if 2 >1 :print("ssss")
+    print("----")
+
+
+if __name__ == '__main__':
+    # test_Other()
+    testIf()

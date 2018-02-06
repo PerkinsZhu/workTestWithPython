@@ -22,9 +22,8 @@ def classify0(inX, dataSet, labels, k):
     sqDiffMat = diffMat**2#矩阵开方
     sqDistances = sqDiffMat.sum(axis=1)#对矩阵行求和 矩阵的每一行向量相加 np.sum([[0,1,2],[2,1,3],axis=1) = array（[3,6]）。得出以为矩阵，长度对应类别数目
     distances = sqDistances**0.5#开根号 计算出待测试点和各个点的距离
-    # print(distances)
     sortedDistIndicies = distances.argsort()#对矩阵排序并取其下标赋值给sortedDistIndicies。这里取下标的作用是为了对应label集合，方便从中取出分类
-    classCount={}          
+    classCount={}
     for i in range(k):#循环求出最接近测试数据K个点的最多的label
         voteIlabel = labels[sortedDistIndicies[i]]#取出对应的label
         classCount[voteIlabel] = classCount.get(voteIlabel,0) + 1 #计算label的数量
@@ -45,7 +44,7 @@ def file2matrix(filename):
     fr = open(filename)
     numberOfLines = len(fr.readlines())         #get the number of lines in the file
     returnMat = zeros((numberOfLines,3))        #prepare matrix to return 创建一个numberOfLines * 3矩阵
-    classLabelVector = []                       #prepare labels return   
+    classLabelVector = []                       #prepare labels return
     fr = open(filename)
     index = 0
     for line in fr.readlines():
@@ -54,7 +53,8 @@ def file2matrix(filename):
         returnMat[index,:] = listFromLine[0:3]
         # 存储类别标签.注意这里，在使用datingTestSet2.txt数据绘制散点图的时候，要把label转化为数值型类型，这样才可以在XY坐标上显示标度。
         # 在使用datingTestSte.txt的时候，因为label为String  需要取消转换 classLabelVector.append(listFromLine[-1])   classLabelVector.append(int(str(listFromLine[-1])))
-        classLabelVector.append(listFromLine[-1])
+        # classLabelVector.append(listFromLine[-1])
+        classLabelVector.append(int(str(listFromLine[-1])))
         index += 1
     return returnMat,classLabelVector
     
@@ -69,19 +69,21 @@ def autoNorm(dataSet):#对数据特征进行归一处理，统一各个特征属
     return normDataSet, ranges, minVals
    
 def datingClassTest():#测试错误率
-    hoRatio = 0.50      #hold out 10%
+    hoRatio = 0.6     #hold out 10%
     datingDataMat,datingLabels = file2matrix('datingTestSet2.txt')       #load data setfrom file
     normMat, ranges, minVals = autoNorm(datingDataMat)
     m = normMat.shape[0]
     numTestVecs = int(m*hoRatio)
     errorCount = 0.0
+    rightCount = 0
     for i in range(numTestVecs):
-        classifierResult = classify0(normMat[i,:],normMat[numTestVecs:m,:],datingLabels[numTestVecs:m],3)
-        print ("the classifier came back with: %d, the real answer is: %d" % (classifierResult, datingLabels[i]))
-        if (classifierResult != datingLabels[i]): errorCount += 1.0
-    print ("the total error rate is: %f" % (errorCount/float(numTestVecs)))
-    print (errorCount)
-    
+        classifierResult = classify0(normMat[i,:],normMat[numTestVecs:m,:],datingLabels[numTestVecs:m],7)
+        if (classifierResult != datingLabels[i]):
+            errorCount += 1.0
+        else:
+            rightCount += 1
+    print("共 %d 组测试数据，正确：%d,错误：%d，正确率：%f %%" % (numTestVecs, rightCount, errorCount, (rightCount/ numTestVecs) * 100))
+
 def img2vector(filename):#图片转向量
     returnVect = zeros((1,1024))
     fr = open(filename)
@@ -129,10 +131,23 @@ def showData(datingDataMat,datingLabels):
     ax.scatter(datingDataMat[:,1],datingDataMat[:,2],15.0*array(datingLabels), 15.0*array(datingLabels))
     plt.show()
 
-if __name__ == '__main__':
+def test1():
     # group ,label =createDataSet()
     # print(classify0([0,1],group,label,3))
     datingDataMat,datingLabels= file2matrix('datingTestSet.txt')
     normDataSet, ranges, minVals = autoNorm(datingDataMat)
     print(classify0([2112.2,1.232,0.252],normDataSet ,datingLabels,50))
     # datingClassTest()
+
+def test2():
+    dataMat,labels = file2matrix('datingTestSet2.txt')
+    showData(dataMat,labels)
+def test3():
+    dataMat, labels = file2matrix('datingTestSet2.txt')
+    print(autoNorm(dataMat))
+    classify0([100,12323,2323],dataMat,labels,10)
+if __name__ == '__main__':
+    # test3()
+    # datingClassTest()
+    # test1()
+    handwritingClassTest()

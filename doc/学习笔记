@@ -1,0 +1,6 @@
+KNN记录
+    1、距离算法有哪几种？分别适用于那种场景？
+    2、正确率的计算方法有哪些？数据测试方式?
+    3、数值归一化方法有哪些，各种方法使用的场景又是什么？ http://blog.csdn.net/mpbchina/article/details/7573519，有量纲到无量纲数据
+决策树
+    1、如何选取bestFuture? ID3、C4.5、CART
