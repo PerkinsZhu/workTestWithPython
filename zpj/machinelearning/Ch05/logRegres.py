@@ -34,7 +34,7 @@ def gradAscent(dataMatIn, classLabels):
     '''
     for k in range(maxCycles):              #heavy on matrix operations 循环计算maxCycles次
         temp =dataMatrix*weights#计算回归系数。这里的weights是指的每个特征的权重，在代入公式计算的时候，需要把各个特征分别乘以特征权重之后求和合并为一个参数，然后代入公式计算
-        h = sigmoid(temp)     #matrix mult    传入回归系数，代入海维赛德阶跃函数 矩阵相乘
+        h = sigmoid(temp)     #matrix mult    传入回归系数，代sigmoid 矩阵相乘
         error = (labelMat - h)              #vector subtraction 计算每组测试数据的差值，用来调整回归系数
         tempData = dataMatrix.transpose() #转置为3*100矩阵
         errorTemp = tempData* error #计算出每个特征属性的权重误差值 结果为3*1矩阵
@@ -122,17 +122,17 @@ def multiTest():
     numTests = 10; errorSum=0.0
     for k in range(numTests):
         errorSum += colicTest()
-    print  ("after %d iterations the average error rate is: %f" % (numTests, errorSum/float(numTests)))
+    print("after %d iterations the average error rate is: %f" % (numTests, errorSum/float(numTests)))
 
 def test():
     dataMat,labelMat = loadDataSet()
-    # data = gradAscent(dataMat,labelMat)
-    #  plotBestFit(data.getA())  #getA()转换为ndarray object.
+    data = gradAscent(dataMat,labelMat)
+    # plotBestFit(data.getA())  #getA()转换为ndarray object.
     # data = stocGradAscent0(array(dataMat),labelMat)
-    data = stocGradAscent1(array(dataMat),labelMat,500)
-    print(data)
-    plotBestFit(data)
+    # data = stocGradAscent1(array(dataMat),labelMat,500)
+    # print(data)
+    # plotBestFit(data)
 
 if __name__ == '__main__':
-    # test()
-    multiTest()
+    test()
+    # multiTest()

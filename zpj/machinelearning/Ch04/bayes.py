@@ -6,7 +6,7 @@ Created on Oct 19, 2010
 from numpy import *
 
 def loadDataSet():
-    #模拟拆分后的文档，用来训练
+    #模拟拆分后的文档，用来训练  这里每行表示一个文档
     postingList=[['my', 'dog', 'has', 'flea', 'problems', 'help', 'please'],
                  ['maybe', 'not', 'take', 'him', 'to', 'dog', 'park', 'stupid'],
                  ['my', 'dalmation', 'is', 'so', 'cute', 'I', 'love', 'him'],
@@ -32,7 +32,7 @@ def setOfWords2Vec(vocabList, inputSet):
     returnVec = [0]*len(vocabList)
     for word in inputSet:
         if word in vocabList:
-            returnVec[vocabList.index(word)] = 1
+            returnVec[vocabList.index(word)] = 1 #注意这里如果该单词出现多次，则这里无法表示出来，只能表示该单词是否出现在词集中
         else: print ("the word: %s is not in my Vocabulary!" % word)#词汇表中未录入单词
     return returnVec
 
@@ -40,7 +40,7 @@ def trainNB0(trainMatrix,trainCategory):
     numTrainDocs = len(trainMatrix)#基元个树，这里每一行数据为最小单位。也即是总数
     numWords = len(trainMatrix[0])
 
-    pAbusive = sum(trainCategory)/float(numTrainDocs)#计算文档侮辱性概率 ，这里求和是用来计算侮辱性文档的总数，然后除以总文档数
+    pAbusive = sum(trainCategory)/float(numTrainDocs)#计算文档侮辱性概率 ，这里求和是用来计算侮辱性文档的总数，然后除以总文档数  侮辱性出现的个数/总个数
     p0Num = ones(numWords); p1Num = ones(numWords)      #change to ones() 使用numpy方法ones（）创建一个一维数组，参数为数组长度，元素值为1。初始化为1的目的是为了防止单词出现概率为0的结果，这样会影响最终结果
 
     p0Denom = 2.0; p1Denom = 2.0                        #change to 2.0
@@ -53,7 +53,7 @@ def trainNB0(trainMatrix,trainCategory):
             p0Denom += sum(trainMatrix[i])
     p1Vect = log(p1Num/p1Denom)          #change to log() 侮辱性词汇中 对（每个单词出现在该类别词汇表中的概率）求log目的为了防止下溢出
     p0Vect = log(p0Num/p0Denom)          #change to log() 非侮辱性词汇中 对（每个单词出现在该类别词汇表中的概率）求log
-            #也即是：词汇表中的每个次分别出现在侮辱性列表文档中的概率和非侮辱性文档中的概率
+            #也即是：词汇表中的每个词分别出现在侮辱性列表文档中的概率和非侮辱性文档中的概率
     '''
     这三个参数就相当于贝叶斯公式中的：P(某个单词|侮辱性文档) P(某个单词|非侮辱性文档) P(侮辱性文档|所有文档) 
         例如：单词'dog'在侮辱性文档中出现的概率为0.12
@@ -225,5 +225,5 @@ if __name__ == '__main__':
     # print(p0v)
     # print(p1v)
     # print(pAB)
-    testingNB()
-    # spamTest()
+    # testingNB()
+    spamTest()
