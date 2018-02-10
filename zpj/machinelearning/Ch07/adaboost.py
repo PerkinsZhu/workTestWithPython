@@ -38,6 +38,9 @@ def stumpClassify(dataMatrix,dimen,threshVal,threshIneq):#just classify the data
 
 def buildStump(dataArr,classLabels,D):
     '''
+    该函数不是属于adaboost的计算策略，而是计算决策桩的算法。因为决策桩只有一层，所以不需要引入信息论那一套模型来构造决策桩。这里构建的步骤是对特征、阈值、大于/小于 分别进行循环，找出最佳的组合即可。
+    在实际引用中，该函数不是固定的。而要根据具体的模型来重新实现。函数的目的就是基于D(各个特征属性的权重值)来找出最优的模型结果
+    循环此函数的目的也就是来逐步调整D的参数
     在基于D 的前提下，寻找到用哪种分类方法对测试数据进行分类能够是错误率最小，其目的是找到最佳错误率。
     寻找的方法就是对三种参数（特征、阈值参数、大于/小于）的所用情况进行组合遍历。所有情况总共为：E(f=range(特征）)（N(阈值参数|f)*2(大于/小于)）
     通过对各种组合进行遍历 找到错误率最低的一种组合，该组合包括参数（特征、阈值、大于/小于）
@@ -70,6 +73,9 @@ def buildStump(dataArr,classLabels,D):
 
                 errArr = mat(ones((m,1))) #创建错误向量，初始化为1
                 errArr[predictedVals == labelMat] = 0#和结果进行整合 把结果正确的数据设置为0，便于计算错误率
+                # 注意这个D使用来计算weightedError的，weightedError是错误率的权重，那么D中元素越大则weightedError值便越大，那么便不会被保留下来。
+                # 所以对于处理错误的参数，提高D的值可以增大错误的权重，错误权重增大则weightedError变大，那么这种情况就不会被保留下来，这样就避免了上次判断错误的情况再次
+                # 发生。这也就是为什么样本被错误分类则权重会增加的原因。权重是用来计算误差的，为了降低误差，选择阈值时会倾向把权重大的分类正确
                 weightedError = D.T*errArr  #calc total error multiplied by D 计算出错误率 注意这里计算的方法，这里没有按照错误率= 错误的/总数，是因为总数就是1，这里就直接省略了
                 # print ("split: dim %d, thresh %.2f, thresh ineqal: %s, the weighted error is %.3f" % (i, threshVal, inequal, weightedError))
                 if weightedError < minError:#如果误差满足条件则进行保存参数
@@ -117,7 +123,6 @@ def adaClassify(datToClass,classifierArr):
                                  classifierArr[i]['thresh'],\
                                  classifierArr[i]['ineq'])#call stump classify
         aggClassEst += classifierArr[i]['alpha']*classEst
-        print (aggClassEst)
     return sign(aggClassEst)
 
 def plotROC(predStrengths, classLabels):
@@ -156,14 +161,14 @@ def testHorse():
 if __name__ == '__main__':
     dataMat, classLabels =loadSimpData()
     # print(dataMat,classLabels)
-    # D =mat(ones((5,1))/5)
-    # bestStump, minError, bestClasEst=buildStump(dataMat,classLabels,D)
+    D =mat(ones((5,1))/5)
+    bestStump, minError, bestClasEst=buildStump(dataMat,classLabels,D)
     # print(bestStump)
     # print(minError)
     # print(bestClasEst)
     # -----------------------------------
-    # weakClassArr, aggClassEst=adaBoostTrainDS(dataMat,classLabels,30)
-    # data =adaClassify([[5,5],[0,0]],weakClassArr)
+    weakClassArr, aggClassEst=adaBoostTrainDS(dataMat,classLabels,30)
+    data =adaClassify([[5,5],[0,0]],weakClassArr)
     # plotROC(aggClassEst.T, classLabels)
     # print(data)
     # -----------------------------------

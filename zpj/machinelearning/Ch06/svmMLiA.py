@@ -360,9 +360,10 @@ def smoPK(dataMatIn, classLabels, C, toler, maxIter):    #full Platt SMO
     return oS.b,oS.alphas
 
 if __name__ == '__main__':
-    dataMat, labelMat = loadDataSet("testSet.txt")
-    print(dataMat)
-    print(labelMat)
-    b, alphas = smoSimple(dataMat,labelMat,0.6,0.001,40)
+    testRbf()
+    # dataMat, labelMat = loadDataSet("testSet.txt")
+    # print(dataMat)
+    # print(labelMat)
+    # b, alphas = smoSimple(dataMat,labelMat,0.6,0.001,40)
     # print(b)
     # print(alphas)
