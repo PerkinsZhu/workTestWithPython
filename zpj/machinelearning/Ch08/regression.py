@@ -21,10 +21,7 @@ def loadDataSet(fileName):      #general function to parse tab -delimited floats
 def standRegres(xArr,yArr):#计算回归系数
     xMat = mat(xArr); yMat = mat(yArr).T
     temp= xMat.T
-    print(xMat)
-    print(temp)
     xTx = temp*xMat
-    print(xTx)
     if linalg.det(xTx) == 0.0:#计算行列式是否为0
         print ("This matrix is singular, cannot do inverse")
         return
@@ -274,6 +271,22 @@ def testBaoYu():
 
 
 import matplotlib.pyplot as plt
-if __name__ == '__main__':
-    testBaoYu()
 
+
+def testOne():
+    x, y = loadDataSet("ex0.txt")
+    ws = standRegres(x, y)
+
+    xMat = mat(x)
+    yMat = mat(y)
+    yHat = xMat * ws
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.scatter(xMat[:,1].flatten().A[0],yMat.T[:,0].flatten().A[0])
+    xCopy =xMat.copy()
+    xCopy.sort(0)
+    ax.plot(xCopy[:,1],yHat)
+    plt.show()
+
+if __name__ == '__main__':
+    test()
