@@ -88,9 +88,9 @@ class BaseTest(unittest.TestCase):
         print(stu.__name)
         # print(stu.__num)
     def test_Array(self):
-        data = np.arange(4).reshape(2,2)
+        data = np.arange(12)*2
         print(data)
-        # print(data[[1,2]])
+        print(data[[1,2]])
 
 
     def testWhile(self):

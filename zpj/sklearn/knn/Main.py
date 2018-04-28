@@ -3,6 +3,8 @@ from sklearn import datasets
 from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
 from tensorflow.examples.tutorials.mnist import input_data
+import heapq
+
 
 def doHandel():
     """
@@ -73,19 +75,32 @@ def countBySklearn(train_x, train_y, test_x, test_y, top, temp_x):
     knn.fit(train_x, train_y)
     predict_y = knn.predict(temp_x)
     accuracy = knn.score(test_x, test_y, sample_weight=None)
-    print(accuracy)
+    print("sklearn--->",accuracy)
 
 
 import tensorflow as tf
+
+
 def countByTensorFlow(train_x, train_y, test_x, test_y, top, temp_x):
-    print(train_x.shape)
-    tra_X = tf.placeholder("float", [700, 3]) #存放训练数据
-    te_X = tf.placeholder("float", [3])  #存放测试数据(每一行的)
+    """
+    该方法默认使用top = 1来确定测试数据的type
+    :param train_x:
+    :param train_y:
+    :param test_x:
+    :param test_y:
+    :param top:
+    :param temp_x:
+    :return:
+    """
+    tra_X = tf.placeholder("float", [600, 3])  # 存放训练数据
+    te_X = tf.placeholder("float", [3])  # 存放测试数据(每一行的)
 
     # Nearest Neighbor calculation using L1 Distance
     # Calculate L1 Distance
     # 使用LI 曼哈顿距离计算
-    distance = tf.reduce_sum(tf.abs(tf.add(tra_X, tf.negative(te_X))), reduction_indices=1)
+    # distance = tf.reduce_sum(tf.abs(tf.add(tra_X, tf.negative(te_X))), reduction_indices=1)
+    # 使用欧氏距离
+    distance = tf.sqrt(tf.reduce_sum(tf.square(tra_X-te_X), reduction_indices=1))
     # Prediction: Get min distance index (Nearest neighbor)
     # 求出距离最小的元素在数组中的index 位置
     pred = tf.arg_min(distance, 0)
@@ -103,17 +118,35 @@ def countByTensorFlow(train_x, train_y, test_x, test_y, top, temp_x):
             # 这里返回的结果就是pred的结果，也就是最小距离所在的index
             nn_index = sess.run(pred, feed_dict={tra_X: train_x, te_X: test_x[i, :]})
             # Get nearest neighbor class label and compare it to its true label
-            print("Test", i, "Prediction:", np.argmax(train_y[nn_index]),"True Class:", np.argmax(test_y[i]))
             # Calculate accuracy
             if np.argmax(train_y[nn_index]) == np.argmax(test_y[i]):
                 accuracy += 1. / len(test_x)
-        print("Done!")
-        print("Accuracy:", accuracy)
+        print("countByTensorFlow--->", accuracy)
 
+
+def countByTensorFlow2(train_x, train_y, test_x, test_y, top, temp_x):
+    tra_X = tf.placeholder("float", [600, 3])  # 存放训练数据
+    te_X = tf.placeholder("float", [3])  # 存放测试数据(每一行的)
+    # distance = tf.reduce_sum(tf.abs(tf.add(tra_X, tf.negative(te_X))), reduction_indices=1)
+    distance = tf.sqrt(tf.reduce_sum(tf.square(tra_X - te_X), reduction_indices=1))
+    accuracy = 0.
+    # init = tf.initialize_all_variables()
+    init = tf.global_variables_initializer()
+    with tf.Session() as sess:
+        sess.run(init)
+        for i in range(len(test_x)):
+            nn_index = sess.run(distance, feed_dict={tra_X: train_x, te_X: test_x[i, :]})
+            index = np.argpartition(nn_index, top)[:top]  # 求出前top个最小元素的index
+            typeStr = train_y[index]  # 求出前top个最小元素的index对应的类型
+            temp = np.bincount([int(item) for item in typeStr]) #求出该索引位置的值出现的次数：https://blog.csdn.net/xlinsist/article/details/51346523
+            newType =  np.argmax(temp)
+            if newType == int(test_y[i]):
+                accuracy += 1. / len(test_x)
+        print("countByTensorFlow2--->", accuracy)
 
 
 def doDatingTestSet(top):
-    testIndex = -300
+    testIndex = -400
     data = open("F:\MyCodeForPython\workTestWithPython\zpj\machinelearning\Ch02\datingTestSet2.txt").readlines()
     temp_x = []
     temp_y = []
@@ -131,8 +164,9 @@ def doDatingTestSet(top):
     test_x = data_x[choices[testIndex:]]
     test_y = data_y[choices[testIndex:]]
 
-    # countBySklearn(train_x, train_y, test_x, test_y, top, temp_x)
+    countBySklearn(train_x, train_y, test_x, test_y, top, temp_x)
     countByTensorFlow(train_x, train_y, test_x, test_y, top, temp_x)
+    countByTensorFlow2(train_x, train_y, test_x, test_y, top, temp_x)
 
 
 def tensorFlowKNN():
@@ -156,7 +190,8 @@ def tensorFlowKNN():
     accuracy = 0.
 
     # Initializing the variables
-    init = tf.initialize_all_variables()
+    # init = tf.initialize_all_variables()
+    init = tf.global_variables_initializer()
 
     # Launch the graph
     with tf.Session() as sess:
@@ -172,12 +207,12 @@ def tensorFlowKNN():
             # Calculate accuracy
             if np.argmax(train_Y[nn_index]) == np.argmax(test_Y[i]):
                 accuracy += 1. / len(test_X)
-        print("Done!")
-        print("Accuracy:", accuracy)
+        print("tensorFlowKNN--->", accuracy)
+
 
 if __name__ == '__main__':
     # tensorFlowKNN()
-    doDatingTestSet(1)
+    # doDatingTestSet(1)
     # doHandel()
-    # for i in range(1, 100):
-    #     doDatingTestSet(i)
+    for i in range(1, 10):
+        doDatingTestSet(i)
