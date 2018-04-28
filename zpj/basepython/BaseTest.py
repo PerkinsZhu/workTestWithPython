@@ -2,6 +2,7 @@ import unittest
 import time
 import calendar
 import os
+import numpy as np
 
 
 class BaseTest(unittest.TestCase):
@@ -86,6 +87,11 @@ class BaseTest(unittest.TestCase):
         stu.printppp()
         print(stu.__name)
         # print(stu.__num)
+    def test_Array(self):
+        data = np.arange(4).reshape(2,2)
+        print(data)
+        # print(data[[1,2]])
+
 
     def testWhile(self):
         for i in range(10000000):

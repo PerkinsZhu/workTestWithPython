@@ -69,7 +69,7 @@ def autoNorm(dataSet):#对数据特征进行归一处理，统一各个特征属
     return normDataSet, ranges, minVals
    
 def datingClassTest():#测试错误率
-    hoRatio = 0.6     #hold out 10%
+    hoRatio = 0.3     #hold out 10%
     datingDataMat,datingLabels = file2matrix('datingTestSet2.txt')       #load data setfrom file
     normMat, ranges, minVals = autoNorm(datingDataMat)
     m = normMat.shape[0]
@@ -148,6 +148,6 @@ def test3():
     classify0([100,12323,2323],dataMat,labels,10)
 if __name__ == '__main__':
     # test3()
-    # datingClassTest()
+    datingClassTest()
     # test1()
-    handwritingClassTest()
+    # handwritingClassTest()
