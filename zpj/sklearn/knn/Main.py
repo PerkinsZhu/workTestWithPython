@@ -4,7 +4,7 @@ from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
 from tensorflow.examples.tutorials.mnist import input_data
 import heapq
-
+from sklearn import preprocessing
 
 def doHandel():
     """
@@ -155,7 +155,9 @@ def doDatingTestSet(top):
         temp_x.append([float(item) for item in array[:-1]])
         temp_y.append(array[-1])
 
-    data_x, ranges, minVals = autoNorm(np.array(temp_x))
+    # 归一化处理
+    # data_x, ranges, minVals = autoNorm(np.array(temp_x))
+    data_x = preprocessing.scale(np.array(temp_x))
     data_y = np.array(temp_y)
     choices = np.random.permutation(len(data_x))
     train_x = data_x[choices[:testIndex]]
