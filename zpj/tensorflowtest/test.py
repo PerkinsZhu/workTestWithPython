@@ -5,10 +5,12 @@
 import tensorflow as tf
 import numpy as np
 
+
 def testOne():
     hello = tf.constant('Hello, TensorFlow!')
     sess = tf.Session()
     print(sess.run(hello))
+
 
 def testTwo():
     matrix1 = tf.constant([[3., 3.]])
@@ -20,6 +22,8 @@ def testTwo():
     result = sess.run(product)
     print(result)
     sess.close()
+
+
 def testThree():
     graph = tf.Graph()
     with graph.as_default():
@@ -32,10 +36,12 @@ def testThree():
         sess.run(initialize)
         res = sess.run(result)
     print(res)
+
+
 def testFour():
     matrix1 = tf.constant([[3., 3.]])
-    matrix2 = tf.constant([[2.],[3.]])
-    product = tf.matmul(matrix1,matrix2)
+    matrix2 = tf.constant([[2.], [3.]])
+    product = tf.matmul(matrix1, matrix2)
     sess = tf.Session()
     result = sess.run(product)
     print(result)
@@ -48,11 +54,12 @@ def testFive():
     product = tf.matmul(matrix1, matrix2)
     sess = tf.Session()
     result = sess.run(product)
-    print (result)
+    print(result)
+
 
 def testSix():
     # w1 = tf.Variable(tf.random_normal([1, 2], stddev=1, seed=1))
-    w1 = tf.constant([[1.0,1.0]])
+    w1 = tf.constant([[1.0, 1.0]])
     # 因为需要重复输入x，而每建一个x就会生成一个结点，计算图的效率会低。所以使用占位符
     x = tf.placeholder(tf.float32, shape=(1, 2))
     x1 = tf.constant([[0.7, 0.9]])
@@ -71,8 +78,9 @@ def testSix():
     print(y_2)
     sess.close
 
+
 if __name__ == '__main__':
     # testTwo()
-    # testOne()
+    testOne()
     # testFive()
-    testSix()
+    # testSix()

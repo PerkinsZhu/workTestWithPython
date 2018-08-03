@@ -213,8 +213,8 @@ def tensorFlowKNN():
 
 
 if __name__ == '__main__':
-    # tensorFlowKNN()
+    tensorFlowKNN()
     # doDatingTestSet(1)
     # doHandel()
-    for i in range(1, 10):
-        doDatingTestSet(i)
+    # for i in range(1, 10):
+    #     doDatingTestSet(i)
