@@ -14,8 +14,8 @@ def getDataList(filePath):
 
 if __name__ == '__main__':
     start = datetime.datetime.now()
-    userList = getDataList("F:/zhupingjing/competition/tianchi/231522/fresh_comp_offline/tianchi_fresh_comp_train_user.csv")
+    userList = getDataList("F:/perkins/competition/tianchi/231522/fresh_comp_offline/tianchi_fresh_comp_train_user.csv")
     print(datetime.datetime.now()- start,len(userList))
     start = datetime.datetime.now()
-    goodsList = getDataList("F:/zhupingjing/competition/tianchi/231522/fresh_comp_offline/tianchi_fresh_comp_train_item.csv")
+    goodsList = getDataList("F:/perkins/competition/tianchi/231522/fresh_comp_offline/tianchi_fresh_comp_train_item.csv")
     print(datetime.datetime.now()- start,len(goodsList))

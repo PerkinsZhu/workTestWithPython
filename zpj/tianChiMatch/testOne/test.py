@@ -80,7 +80,7 @@ def test():
     print(np.array(creatGoodsVectorTable()))
     print(np.array(createUserVectorTable()))
     # print(np.array(creatGoodsVectorTable()))
-    # np.savetxt("E:\zhupingjing\\test\\tianchi\\good.txt", [1,2,3,14])
+    # np.savetxt("E:\perkins\\test\\tianchi\\good.txt", [1,2,3,14])
     # for i in range(100):
     #    fileWriter.write("-----,2323232")
     #    print(i)
@@ -117,7 +117,7 @@ def writToFile(userBuyVector, path):
 
 
 def getResultWriter():
-    path = "E:\zhupingjing\\test\\tianchi\\result.csv"
+    path = "E:\perkins\\test\\tianchi\\result.csv"
     if os.path.exists(path):
         os.remove
     writer = open(path, 'w')
@@ -137,15 +137,15 @@ def initData():
     userVector = np.array(createUserVectorTableWithNotBuy())
     userBuyVector = creatUserBuyVector(goodVector, userVector)
 
-    # writToFile(goodVector,"E:\zhupingjing\\test\\tianchi\\good.txt")
-    # writToFile(userVector,"E:\zhupingjing\\test\\tianchi\\user.txt")
-    writToFile(userBuyVector, "E:\zhupingjing\\test\\tianchi\\data.txt")
+    # writToFile(goodVector,"E:\perkins\\test\\tianchi\\good.txt")
+    # writToFile(userVector,"E:\perkins\\test\\tianchi\\user.txt")
+    writToFile(userBuyVector, "E:\perkins\\test\\tianchi\\data.txt")
 
 
 def loadUserBuyVector():
-    data = np.loadtxt("E:\zhupingjing\\test\\tianchi\\data.txt")
-    # good = np.loadtxt("E:\zhupingjing\\test\\tianchi\\good.txt")
-    # user = np.loadtxt("E:\zhupingjing\\test\\tianchi\\user.txt")
+    data = np.loadtxt("E:\perkins\\test\\tianchi\\data.txt")
+    # good = np.loadtxt("E:\perkins\\test\\tianchi\\good.txt")
+    # user = np.loadtxt("E:\perkins\\test\\tianchi\\user.txt")
     # return good,user,data
     return data
 

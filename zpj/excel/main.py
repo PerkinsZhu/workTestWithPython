@@ -21,14 +21,14 @@ class Excel(unittest.TestCase):
     @staticmethod
     def loadData():
         # return xlrd.open_workbook("G:\\test\\chognqihoutai1.xlsx")
-        return xlrd.open_workbook("G:\\test\\python.xlsx")
+        return xlrd.open_workbook("D:\\test\\python.xlsx")
 
     def testList(self):
         for i in [2, "34", 345]:
             print(i)
 
     def testExcel(self):
-        file = "G:\\test\\python.xls"
+        file = "D:\\test\\python.xls"
         # excelFile = unicode(file, "UTF-8")
         if (os._exists(file)):
             os.remove(file)
