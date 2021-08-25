@@ -1,0 +1,7 @@
+anaconda pip 安装TensorFlow2.0
+    pip install --ignore-installed --upgrade TensorFlow  --use-feature=2020-resolver --user
+
+如果有依赖缺失则：
+    pip install numpy==1.19.3
+卸载命令:
+    pip uninstall gast

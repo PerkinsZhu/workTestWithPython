@@ -32,5 +32,5 @@ def start():
 
 
 if __name__ == '__main__':
-    start()
-    # doWork("test7.png")
+    # start()
+    doWork("test7.png")
