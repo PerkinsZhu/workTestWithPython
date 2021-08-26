@@ -3,11 +3,13 @@ from sklearn.feature_extraction import DictVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 import jieba
+from sklearn.preprocessing import MinMaxScaler
 
 """
 文档地址：
     https://blog.csdn.net/xiaotian127/article/details/86756402
 """
+
 
 def test_Other():
     iris = ds.load_iris()
@@ -89,3 +91,14 @@ def cut_word(text_array):
 
 def pl(text, tip=""):
     print(tip + "\n", text)
+
+
+def test_mm():
+    """
+    归一化处理
+    x'=(x-min)/(max-min), x''=x'*(mx-mi)+mi
+    """
+    # 缩放到 [2,5]之间
+    mm = MinMaxScaler(feature_range=(2, 5))
+    data = mm.fit_transform([[90, 2, 10, 40], [60, 4, 15, 45], [75, 3, 13, 46]])
+    pl(data)
