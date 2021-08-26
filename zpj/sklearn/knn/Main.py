@@ -147,7 +147,7 @@ def countByTensorFlow2(train_x, train_y, test_x, test_y, top, temp_x):
 
 def doDatingTestSet(top):
     testIndex = -400
-    data = open("F:\MyCodeForPython\workTestWithPython\zpj\machinelearning\Ch02\datingTestSet2.txt").readlines()
+    data = open("zpj/machinelearning/Ch02/datingTestSet2.txt").readlines()
     temp_x = []
     temp_y = []
     for line in data:
