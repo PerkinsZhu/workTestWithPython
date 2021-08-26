@@ -4,6 +4,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 import jieba
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import VarianceThreshold
+from sklearn.decomposition import PCA
 
 """
 文档地址：
@@ -76,9 +79,16 @@ def test_TFIDF():
     tf = TfidfVectorizer()
     newTextArray = cut_word(originText)
     data = tf.fit_transform(newTextArray)
+    pl(data, "data")
+    pl(data.toarray(), "array")
+    pl(tf.get_feature_names(), "feature_name")
+
+
+def test_standardScaler():
+    std = StandardScaler()
+    data = std.fit_transform([[1, -1, 3], [2, 4, 2], [4, 6, -1]])
     pl(data)
-    pl(data.toarray)
-    pl(tf.get_feature_names())
+    pl(std.var_)
 
 
 def cut_word(text_array):
@@ -102,3 +112,24 @@ def test_mm():
     mm = MinMaxScaler(feature_range=(2, 5))
     data = mm.fit_transform([[90, 2, 10, 40], [60, 4, 15, 45], [75, 3, 13, 46]])
     pl(data)
+
+
+def test_variance_threshold():
+    """
+    降维- 特征选择
+    """
+    x = [[0, 2, 0, 3], [0, 1, 4, 3], [0, 1, 1, 3]]
+    selector = VarianceThreshold(threshold=0)
+    data = selector.fit_transform(x)
+    pl(data)
+
+
+def test_pac():
+    """
+        降维-主成分分析
+    """
+    pca = PCA(n_components=0.9)
+    data = pca.fit_transform([[2, 8, 4, 5], [6, 3, 0, 8], [5, 4, 9, 1]])
+    print(data)
+
+# todo 交叉表  合并表
