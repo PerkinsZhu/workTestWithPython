@@ -1,6 +1,6 @@
 import operator
 from os import listdir
-
+from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 from numpy import *
 
@@ -131,11 +131,17 @@ def loadFiles(dirPath):
 
 
 def test_dig():
-    x_train, y_train = loadFiles("G:\\test\\digits\\trainingDigits")
+    x_train, y_train = loadFiles("D:\\test\\data\\digits\\trainingDigits")
 
-    x_test, y_test = loadFiles("G:\\test\\digits\\testDigits")
+    x_test, y_test = loadFiles("D:\\test\\data\\digits\\testDigits")
 
     estimator = KNeighborsClassifier(n_neighbors=3)
+    # estimator.fit(x_train, y_train)
+
+    # 加入网格搜索与交叉验证
+    # 参数准备
+    param_dict = {"n_neighbors": [1, 3, 5, 7, 9, 11]}
+    estimator = GridSearchCV(estimator, param_grid=param_dict, cv=3)
     estimator.fit(x_train, y_train)
 
     y_predict = estimator.predict(x_test)
@@ -144,3 +150,12 @@ def test_dig():
 
     score = estimator.score(x_test, y_test)
     print("准确率为:{}".format(score))
+
+    # 最佳参数：best_params_
+    print("最佳参数：\n", estimator.best_params_)
+    # 最佳结果：best_score_
+    print("最佳结果：\n", estimator.best_score_)
+    # 最佳估计器：best_estimator_
+    print("最佳估计器:\n", estimator.best_estimator_)
+    # 交叉验证结果：cv_results_
+    print("交叉验证结果:\n", estimator.cv_results_)

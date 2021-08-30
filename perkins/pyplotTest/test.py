@@ -5,6 +5,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.datasets.samples_generator import make_blobs
+from sklearn.datasets import make_blobs
+from matplotlib import pyplot
+import math
 
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 用来正常显示中文标签
 plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
@@ -13,8 +16,6 @@ plt.rcParams['axes.unicode_minus'] = False  # 用来正常显示负号
 # 有中文出现的情况，需要u'内容'
 
 def test1():
-    from sklearn.datasets import make_blobs
-    from matplotlib import pyplot
     data, target = make_blobs(n_samples=1000, n_features=2, centers=3)
     # pyplot.scatter(data[:, 0], data[:, 1], c=target);
     pyplot.plot([1, 5, 2, 5, 6], [1, 5, 9, 5, 6]);
@@ -111,3 +112,34 @@ def test6():
 
 if __name__ == '__main__':
     test6()
+
+
+def test_sigmoid():
+    """
+    sigmoid
+    """
+    x = np.arange(-10, 10, 0.1)
+    y = []
+    for t in x:
+        y_1 = 1 / (1 + math.exp(-t))
+        y.append(y_1)
+    plt.plot(x, y, label="sigmoid")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.ylim(0, 1)
+    plt.legend()
+    plt.show()
+
+
+def test_log():
+    x = np.arange(-10, 10, 0.1)
+    y = []
+    for t in x:
+        y_1 = math.log(10, t)
+        y.append(y_1)
+    plt.plot(x, y, label="log")
+    plt.xlabel("x")
+    plt.ylabel("y")
+    plt.ylim(0, 1)
+    plt.legend()
+    plt.show()

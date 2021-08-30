@@ -115,7 +115,8 @@ def createTree(dataSet, labels):
     for value in uniqueVals:  # 循环对每个分叉进行递归操作。
         subLabels = labels[:]  # copy all of labels, so trees don't mess up existing labels
         newDataSet = splitDataSet(dataSet, bestFeat, value)
-        myTree[bestFeatLabel][value] = createTree(newDataSet, subLabels)
+        tempTree =createTree(newDataSet, subLabels)
+        myTree[bestFeatLabel][value] = tempTree
 
     return myTree
 
