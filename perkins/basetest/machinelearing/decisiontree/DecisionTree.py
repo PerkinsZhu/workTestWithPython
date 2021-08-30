@@ -3,6 +3,10 @@ from math import log
 from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier, export_graphviz
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import load_wine
+from sklearn.model_selection import cross_val_score
+import matplotlib.pyplot as plt
 
 
 def calcShannonEnt(dataSet):
@@ -146,3 +150,67 @@ def test_decision_tree_with_sklean():
     score = estimator.score(x_test, y_test)
     print("准确率:", score)
     export_graphviz(estimator, out_file="iris_tree.dot", feature_names=iris.feature_names)
+
+
+def test_random_forest():
+    """
+    随机森林
+    """
+    wine = load_wine()
+    Xtrain, Xtest, Ytrain, Ytest = train_test_split(wine.data, wine.target, test_size=0.3)
+    clf = DecisionTreeClassifier(random_state=0)
+    rfc = RandomForestClassifier(random_state=0)
+    clf = clf.fit(Xtrain, Ytrain)
+    rfc = rfc.fit(Xtrain, Ytrain)
+    score_c = clf.score(Xtest, Ytest)
+    score_r = rfc.score(Xtest, Ytest)
+    print("Single Tree:{}".format(score_c), "Random Forest:{}".format(score_r))
+
+
+def test_random_forest_cross():
+    # 目的是带大家复习一下交叉验证
+    # 交叉验证：是数据集划分为n分，依次取每一份做测试集，每n-1份做训练集，多次训练模型以观测模型稳定性的方法
+    wine = load_wine()
+    rfc = RandomForestClassifier(n_estimators=25)
+    rfc_s = cross_val_score(rfc, wine.data, wine.target, cv=10)
+    clf = DecisionTreeClassifier()
+    clf_s = cross_val_score(clf, wine.data, wine.target, cv=10)
+    plt.plot(range(1, 11), rfc_s, label="RandomForest")
+    plt.plot(range(1, 11), clf_s, label="Decision Tree")
+    plt.legend()
+    plt.show()
+
+
+def test_compile_10():
+    """
+    决策树的随机森林在10组交叉验证下的对比效果
+    """
+    wine = load_wine()
+    rfc_l = []
+    clf_l = []
+    for i in range(10):
+        rfc = RandomForestClassifier(n_estimators=25)
+        rfc_s = cross_val_score(rfc, wine.data, wine.target, cv=10).mean()
+        rfc_l.append(rfc_s)
+        clf = DecisionTreeClassifier()
+        clf_s = cross_val_score(clf, wine.data, wine.target, cv=10).mean()
+        clf_l.append(clf_s)
+    plt.plot(range(1, 11), rfc_l, label="Random Forest")
+    plt.plot(range(1, 11), clf_l, label="Decision Tree")
+    plt.legend()
+    plt.show()
+    # 是否有注意到，单个决策树的波动轨迹和随机森林一致？
+    # 再次验证了我们之前提到的，单个决策树的准确率越高，随机森林的准确率也会越高
+
+
+def test_st():
+    wine = load_wine()
+    superpa = []
+    for i in range(200):
+        rfc = RandomForestClassifier(n_estimators=i + 1, n_jobs=-1)
+        rfc_s = cross_val_score(rfc, wine.data, wine.target, cv=10).mean()
+        superpa.append(rfc_s)
+    print(max(superpa), superpa.index(max(superpa)))
+    plt.figure(figsize=[20, 5])
+    plt.plot(range(1, 201), superpa)
+    plt.show()
