@@ -127,7 +127,8 @@ def multiTest():
 def test():
     dataMat,labelMat = loadDataSet()
     data = gradAscent(dataMat,labelMat)
-    # plotBestFit(data.getA())  #getA()转换为ndarray object.
+    print(data)
+    plotBestFit(data.getA())  #getA()转换为ndarray object.
     # data = stocGradAscent0(array(dataMat),labelMat)
     # data = stocGradAscent1(array(dataMat),labelMat,500)
     # print(data)
