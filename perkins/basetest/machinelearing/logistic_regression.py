@@ -35,6 +35,8 @@ def gradAscent(dataMatIn, classLabels):
         h = sigmoid(temp)
         error = (labelMat - h)
         errorTemp = dataMatrix.transpose() * error
+        # errorTemp是真实值和当前计算结果的差距，如果真实值比当前结果小，则errorTemp为负，如果真实值比当前结果大，则errorTemp为正，
+        # 因此 weights加上(alpha * errorTemp)会进一步缩小和真实值的差别
         weights = weights + alpha * errorTemp
 
     return weights

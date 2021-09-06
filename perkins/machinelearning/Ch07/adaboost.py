@@ -153,23 +153,23 @@ def plotROC(predStrengths, classLabels):
     print ("the Area Under the Curve is: ",ySum*xStep)
 
 
-def testHorse():
+def test_Horse():
     dataMat, labelMat = loadDataSet("horseColicTraining2.txt")
     weakClassArr, aggClassEst =adaBoostTrainDS(dataMat,labelMat,10)
     plotROC(aggClassEst.T, labelMat)
 
-if __name__ == '__main__':
+def test_simple():
     dataMat, classLabels =loadSimpData()
     # print(dataMat,classLabels)
-    D =mat(ones((5,1))/5)
-    bestStump, minError, bestClasEst=buildStump(dataMat,classLabels,D)
+    # D =mat(ones((5,1))/5)
+    # bestStump, minError, bestClasEst=buildStump(dataMat,classLabels,D)
     # print(bestStump)
     # print(minError)
     # print(bestClasEst)
     # -----------------------------------
     weakClassArr, aggClassEst=adaBoostTrainDS(dataMat,classLabels,30)
     data =adaClassify([[5,5],[0,0]],weakClassArr)
-    # plotROC(aggClassEst.T, classLabels)
-    # print(data)
+    plotROC(aggClassEst.T, classLabels)
+    print(data)
     # -----------------------------------
-    testHorse()
+    # testHorse()
