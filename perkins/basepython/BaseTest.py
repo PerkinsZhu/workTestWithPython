@@ -87,11 +87,11 @@ class BaseTest(unittest.TestCase):
         stu.printppp()
         print(stu.__name)
         # print(stu.__num)
-    def test_Array(self):
-        data = np.arange(12)*2
-        print(data)
-        print(data[[1,2]])
 
+    def test_Array(self):
+        data = np.arange(12) * 2
+        print(data)
+        print(data[[1, 2]])
 
     def testWhile(self):
         for i in range(10000000):
@@ -111,3 +111,81 @@ class Student:
 
     def __del__(self):
         print(" i am deathing")
+
+
+def test_list():
+    list = ['red', 'green', 'blue', 'yellow', 'white', 'black']
+    print(list[0])
+    print(list[-1])
+    print(list[2:4])  # 左闭右开
+    # 从第二位开始（包含）截取到倒数第二位（不包含）
+    print("list[1:-2]: ", list[1:-2])
+    # 从倒数第二个到最后 左闭
+    print(list[-2:])
+    print(list[-4:-1:2])  # 这里的第三个数字是步长，也即这里的2
+    print(['a'] * 4)
+    print(['a', 'b', 'c'] * 4)
+    print([['a', 'b', 'c']] * 4)
+    print([['a', 'b', 'c'], ['d', 'e', 'f']] * 4)
+    print([1, 2, 3] + [4, 5, 6])
+    print(3 in [1, 2, 3])
+
+
+def test_bit_option():
+    a = set('abracadabra')
+    b = set('alacazam')
+    print(a)
+    print(b)
+    print(a - b)  # 集合a中包含而集合b中不包含的元素
+    print(a | b)  # 集合a或b中包含的所有元素
+    print(a & b)  # 集合a和b中都包含了的元素
+    print(a ^ b)  # 不同时包含于a和b的元素
+    a = {x for x in 'abracadabra' if x not in 'abc'}
+    print(a)
+
+
+class A:
+    # 定义基本属性
+    i = 100
+    # 定义私有属性,私有属性在类外部无法直接进行访问
+    __weight = 100
+
+    # 第一个方法参数是 self则为类方法
+    def run(self):
+        print("成员方法，通过对象调用 self 是对象 ", self)
+
+    # 类方法 cls 代表的是 class
+    @classmethod
+    def say(cls):
+        print("类方法，支持类名和对象两种调用方式 say.cls是类", cls)
+
+    # 静态的类方法
+    @staticmethod
+    def info():
+        print("静态方法，支持类名和对象两种调用方式")
+
+
+class B:
+    def __init__(self):
+        print("我是B")
+
+
+class A1(A, B):
+    def __init__(self):
+        print("我是A的子类")
+
+
+def test_object():
+    a = A()
+    print(a.i)
+    a.run()
+    a.say()
+    a.info()
+    A.say()
+    A.info()
+
+
+def test_extends():
+    a = A1()
+    print(a.i)
+    a.run()
