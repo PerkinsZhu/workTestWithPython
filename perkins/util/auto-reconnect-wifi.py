@@ -4,8 +4,9 @@ Created by PerkinsZhu on 2022/8/18 12:40
 
 import os
 import subprocess
-import time
 from time import strftime, localtime
+
+from apscheduler.schedulers.blocking import BlockingScheduler
 
 ssid = "wifi name"
 
@@ -44,6 +45,8 @@ def match(text):
 
 
 if __name__ == '__main__':
-    while True:
-        check_wifi()
-        time.sleep(20)
+    print("启动定时器任务，每60秒执行一次")
+    s = BlockingScheduler()
+    s.add_job(check_wifi, 'interval', seconds=60, timezone='Asia/Shanghai')  # 10秒运行一次
+    s.start()
+    print("任务启动成功")
