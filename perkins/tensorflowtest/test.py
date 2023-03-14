@@ -128,8 +128,8 @@ def testFeed():
 
 
 if __name__ == '__main__':
-    # testTwo()
+    testTwo()
     # testOne()
     # testFive()
     # testSix()
-    testFeed()
+    # testFeed()
